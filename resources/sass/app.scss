@@ -1,0 +1,69 @@
+
+// Fonts
+// @import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+// @import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.not-found {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -45px;
+    width: 100%;
+    height: 99vh;
+
+    .content {
+        color: #222;
+        opacity: .3;
+
+        h1 {
+            font-weight: 600;
+            font-size: 20px;
+        }
+    }
+}
+
+.navbar-dark .navbar-nav .nav-link.disabled {
+    color: rgba(255,255,255, .3);
+}
+
+.add-note-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 260px;
+    border: 2px dashed rgba(0, 0, 0, 0.15);
+
+    .add-note-link {
+        position: relative;
+        top: 5px;
+        text-align: center;
+        color: rgba(0, 0, 0, .3);
+        transition: color .35s;
+
+        &:hover,
+        &:focus {
+            text-decoration: none;
+            color: rgba(0, 0, 0, .5);
+        }
+
+        .add-note-symbol {
+            font-size: 100px;
+            font-weight: 300;
+        }
+
+        p {
+            margin: 0;
+            font-size: 18px;
+        }
+    }
+}
