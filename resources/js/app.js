@@ -43,9 +43,9 @@ if (document.getElementById('root')) {
 							<GuestRoute exact path="/password/forget" component={Forget} />
 							<GuestRoute exact path="/password/forget/send" component={ForgetEmailSend} />
 							<GuestRoute exact path="/password/reset" component={Reset} />
-							<Route exact path="/notes" component={Notes} />
-							<Route exact path="/notes/create" component={AddNote} />
-							<Route exact path="/notes/:id/edit" component={EditNote} />
+							<PrivateRoute exact path="/notes" component={Notes} />
+							<PrivateRoute exact path="/notes/create" component={AddNote} />
+							<PrivateRoute exact path="/notes/:id/edit" component={EditNote} />
 							<Route component={NotFound} />
 						</Switch>
 					</>

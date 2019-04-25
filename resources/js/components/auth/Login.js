@@ -32,8 +32,7 @@ class Login extends Component {
 		this.props.login(user)
 				.then(() => {
 					this.setState({ errors: [] })
-					this.props.history.push('/notes')
-				})
+				}, () => this.props.history.push('/notes'))
 				.catch(err => {
 					const { error } = err.response.data
 					this.setState({ errors: error })

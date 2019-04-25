@@ -1,14 +1,14 @@
 import React, { Component, createContext } from 'react'
-import { withRouter } from 'react-router-dom'
 
-const AuthContext = React.createContext()
+const AuthContext = createContext()
 
 class AuthProvider extends Component {
 	constructor(props) {
 		super(props)
 
 		this.state = {
-
+			accessToken: localStorage.getItem('access_token') || '',
+			refreshToken: localStorage.getItem('refresh_token') || ''
 		}
 		this.login = this.login.bind(this)
 		this.register = this.register.bind(this)
@@ -35,29 +35,26 @@ class AuthProvider extends Component {
 	}
 
 	logout() {
-		const token = localStorage.getItem('access_token')
-
 		axios({
 			method: 'POST',
 			url: '/api/logout',
 			headers: {
-				Authorization: `Bearer ${token}`
+				Authorization: `Bearer ${this.state.accessToken}`
 			}
-		}).then(res => {
-				console.log(res.data)
+		})
+		.then(res => {
+			console.log(res.data)
 
-				this.setState({
-					isAuthenticated: false,
-					first_name: '',
-					last_name: '',
-					email: ''
-				})
+			localStorage.clear()
 
-				localStorage.clear()
+			this.setState({
+				accessToken: '',
+				refreshToken: '',
 			})
-			.catch(err => {
-				console.log(err.response)
-			})
+		})
+		.catch(err => {
+			console.log(err.response)
+		})
 	}
 
 	/**

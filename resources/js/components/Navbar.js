@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { UserContext } from './context/UserProvider'
+// import { UserContext } from './context/UserProvider'
 import { withAuth } from './context/AuthProvider';
 
 function Navbar(props) {
@@ -17,52 +17,51 @@ function Navbar(props) {
 									<span className="navbar-toggler-icon"></span>
 								</button>
 
-								<UserContext.Consumer>
-									{(user) => (
-										<div className="collapse navbar-collapse" id="navbarSupportedContent">
-											<ul className="navbar-nav pl-3 mr-auto">
-												{(user.isAuthenticated) && (
-													<li className="nav-item">
-														<Link to="/notes" className="nav-link">Notes</Link>
-													</li>
-												)}
-												<li className="nav-item active">
-													<Link to="/" className="nav-link">Home</Link>
-												</li>
+									<div className="collapse navbar-collapse" id="navbarSupportedContent">
+										<ul className="navbar-nav pl-3 mr-auto">
+											{ props.accessToken &&
 												<li className="nav-item">
-													<Link to="/about" className="nav-link">About</Link>
+													<NavLink to="/notes" className="nav-link">Notes</NavLink>
 												</li>
-												<li className="nav-item">
-													<Link to="/contact" className="nav-link">Contact</Link>
-												</li>
-												<li className="nav-item">
-													<Link to="/faq" className="nav-link">FAQ</Link>
-												</li>
-											</ul>
+											}
+											<li className="nav-item">
+												<NavLink exact to="/" className="nav-link">Home</NavLink>
+											</li>
+											<li className="nav-item">
+												<NavLink to="/about" className="nav-link">About</NavLink>
+											</li>
+											<li className="nav-item">
+												<NavLink to="/contact" className="nav-link">Contact</NavLink>
+											</li>
+											<li className="nav-item">
+												<NavLink to="/faq" className="nav-link">FAQ</NavLink>
+											</li>
+										</ul>
 
-											<ul className="navbar-nav ml-auto">
-												{ (user.isAuthenticated) ? (<>
+										<ul className="navbar-nav ml-auto">
+											{ props.accessToken ?
+											<>
 												<li className="nav-item">
-													<span className="nav-link disabled">{user.first_name} {user.last_name}</span>
+													<span className="nav-link disabled">Hardcoded Name</span>
+													{/* <span className="nav-link disabled">{user.first_name} {user.last_name}</span> */}
 												</li>
 												<li className="nav-item"><span className="nav-link disabled">|</span></li>
 
 												<li className="nav-item">
-													<Link to="/" onClick={props.logout} className="nav-link btn btn-link">Logout</Link>
+													<button onClick={() => props.logout()} className="nav-link btn btn-link">Logout</button>
 												</li>
-
-												</>) : (<>
+											</> :
+											<>
 												<li className="nav-item mr-1">
-													<Link to="/login" className="nav-link">Login</Link>
+													<NavLink to="/login" className="nav-link">Login</NavLink>
 												</li>
 												<li className="nav-item">
-													<Link to="/register" className="btn btn-light">Sign up</Link>
+													<NavLink to="/register" className="btn btn-light">Sign up</NavLink>
 												</li>
-												</>)}
-											</ul>
-										</div>
-									)}
-								</UserContext.Consumer>
+											</>}
+										</ul>
+									</div>
+
 							</nav>
 
 						</div>

@@ -1,22 +1,15 @@
 import React from 'react'
-import { Route, Redirect } from 'react-router-dom'
-import { UserContext } from '../context/UserProvider'
+import { Route, Redirect, withRouter } from 'react-router-dom'
+import { withAuth } from '../context/AuthProvider';
 
-function PrivateRoute({ component: Component, ...rest }) {
+function PrivateRoute(props) {
+	const { component: Component, ...rest } = props
+
 	return (
-		<UserContext.Consumer>
-			{(context) => (
-				<Route {...rest} render={(props) => (
-					context.isAuthenticated === true
-					? <Component {...props} />
-					: <Redirect to={{
-						pathname: '/login',
-						state: { from: props.location }
-					}} />
-				)} />
-			)}
-		</UserContext.Consumer>
+		props.accessToken ?
+			<Route {...rest} component={Component} /> :
+			<Redirect to="/login" />
 	)
 }
 
-export default PrivateRoute
+export default withAuth(withRouter(PrivateRoute))

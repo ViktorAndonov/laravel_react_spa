@@ -10,20 +10,10 @@ class UserProvider extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			isAuthenticated: false,
 			first_name: '',
 			last_name: '',
 			email: ''
 		}
-		this.toggleAuth = this.toggleAuth.bind(this)
-	}
-
-	toggleAuth() {
-		this.setState(prevState => {
-			return {
-				isAuthenticated: !prevState.isAuthenticated
-			}
-		})
 	}
 
 	componentDidMount() {
@@ -55,8 +45,7 @@ class UserProvider extends Component {
 	render() {
 		return (
 			<UserContext.Provider value={{
-				...this.state,
-				toggleAuth: this.toggleAuth,
+				...this.state
 			}}>
 				{this.props.children}
 			</UserContext.Provider>
