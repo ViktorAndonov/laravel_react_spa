@@ -27,12 +27,12 @@ import EditNote from './components/notes/EditNote'
 
 // Context
 import AuthProvider from './components/context/AuthProvider'
-import UserProvider from './components/context/UserProvider'
+// import UserProvider from './components/context/UserProvider'
 
 if (document.getElementById('root')) {
 	ReactDOM.render(
 		<AuthProvider>
-			<UserProvider>
+			{/* <UserProvider> */}
 				<Router>
 					<>
 						<Navbar />
@@ -50,7 +50,7 @@ if (document.getElementById('root')) {
 						</Switch>
 					</>
 				</Router>
-			</UserProvider>
+			{/* </UserProvider> */}
 		</AuthProvider>,
 	document.getElementById('root'))
 }

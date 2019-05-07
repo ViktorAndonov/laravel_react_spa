@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { UserContext } from './UserProvider'
+// import { UserContext } from './UserProvider'
 
 const withUser = Component => {
 	return props => (

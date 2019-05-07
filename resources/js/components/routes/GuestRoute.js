@@ -6,7 +6,7 @@ function GuestRoute(props) {
 	const { component: Component, ...rest } = props
 
 	return (
-		!props.accessToken ?
+		!localStorage.getItem('access_token') ?
 			<Route {...rest} component={Component} /> :
 			<Redirect to="/notes" />
 	)

@@ -42,7 +42,7 @@ function Navbar(props) {
 											{ props.accessToken ?
 											<>
 												<li className="nav-item">
-													<span className="nav-link disabled">Hardcoded Name</span>
+													<span className="nav-link disabled">{props.accessToken}</span>
 													{/* <span className="nav-link disabled">{user.first_name} {user.last_name}</span> */}
 												</li>
 												<li className="nav-item"><span className="nav-link disabled">|</span></li>
