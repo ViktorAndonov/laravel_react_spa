@@ -51,7 +51,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
  // Context
 
- // import UserProvider from './components/context/UserProvider'
+
 
 if (document.getElementById('root')) {
   react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_context_AuthProvider__WEBPACK_IMPORTED_MODULE_16__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["BrowserRouter"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Navbar__WEBPACK_IMPORTED_MODULE_3__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Switch"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
@@ -211,11 +211,11 @@ function Navbar(props) {
     className: "nav-link"
   }, "FAQ"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
     className: "navbar-nav ml-auto"
-  }, props.accessToken ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+  }, localStorage.getItem('access_token') ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "nav-item"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "nav-link disabled"
-  }, props.accessToken)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+  }, "HARDCODED")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "nav-item"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "nav-link disabled"
@@ -380,7 +380,8 @@ function (_Component) {
       this.props.login(user).then(function () {
         _this2.setState({
           errors: []
-        }), _this2.props.history.push('/notes');
+        }); // this.props.history.push('/notes')
+
       })["catch"](function (err) {
         var error = err.response.data.error;
 
@@ -1058,8 +1059,6 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -1076,6 +1075,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 var AuthContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["createContext"])();
 
@@ -1090,26 +1091,51 @@ function (_Component) {
     _classCallCheck(this, AuthProvider);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(AuthProvider).call(this, props));
+
+    _defineProperty(_assertThisInitialized(_this), "_isMounted", false);
+
+    _defineProperty(_assertThisInitialized(_this), "login", function (user) {
+      return axios.post('/api/login', user).then(function (response) {
+        localStorage.setItem('access_token', response.data.access_token);
+        localStorage.setItem('refresh_token', response.data.refresh_token);
+
+        _this.setState({
+          accessToken: response.data.access_token,
+          refreshToken: response.data.refresh_token
+        });
+
+        return response;
+      });
+    });
+
     _this.state = {
+      isAuth: false,
       accessToken: localStorage.getItem('access_token') || '',
-      refreshToken: localStorage.getItem('refresh_token') || ''
+      refreshToken: localStorage.getItem('refresh_token') || '' // this.login = this.login.bind(this)
+
     };
-    _this.login = _this.login.bind(_assertThisInitialized(_this));
     _this.register = _this.register.bind(_assertThisInitialized(_this));
     _this.logout = _this.logout.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(AuthProvider, [{
-    key: "login",
-    value: function login(user) {
-      return axios.post('/api/login', user).then(function (response) {
-        // console.log(response.data)
-        localStorage.setItem('access_token', response.data.access_token);
-        localStorage.setItem('refresh_token', response.data.refresh_token);
-        return response;
-      });
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this._isMounted = true;
     }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      this._isMounted = false;
+    }
+    /**
+    * Using arrow func's allow us to not
+    * bind the same func in the constructor.
+    * Requires Babel proposal class package.
+    *
+    */
+
   }, {
     key: "register",
     value: function register(newUser) {
@@ -1173,7 +1199,7 @@ function (_Component) {
 var withAuth = function withAuth(Component) {
   return function (props) {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(AuthContext.Consumer, null, function (auth) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Component, _extends({}, auth, props));
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Component, _extends({}, props, auth));
     });
   };
 };

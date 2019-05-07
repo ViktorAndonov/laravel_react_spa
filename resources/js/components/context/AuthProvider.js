@@ -7,20 +7,40 @@ class AuthProvider extends Component {
 		super(props)
 
 		this.state = {
+			isAuth: false,
 			accessToken: localStorage.getItem('access_token') || '',
 			refreshToken: localStorage.getItem('refresh_token') || ''
 		}
-		this.login = this.login.bind(this)
+		// this.login = this.login.bind(this)
 		this.register = this.register.bind(this)
 		this.logout = this.logout.bind(this)
 	}
 
-	login(user) {
+	_isMounted = false
+
+	componentDidMount() {
+			this._isMounted = true
+	}
+	componentWillUnmount() {
+			this._isMounted = false
+	}
+
+	/**
+	* Using arrow func's allow us to not
+	* bind the same func in the constructor.
+	* Requires Babel proposal class package.
+	*
+	*/
+	login = (user) => {
 		return axios.post('/api/login', user)
 			.then(response => {
-				// console.log(response.data)
 				localStorage.setItem('access_token', response.data.access_token)
 				localStorage.setItem('refresh_token', response.data.refresh_token)
+
+				this.setState({
+					accessToken: response.data.access_token,
+					refreshToken: response.data.refresh_token,
+				})
 
 				return response
 			})
@@ -89,7 +109,7 @@ export const withAuth = Component => {
 			<AuthContext.Consumer>
 				{(auth) => {
 					return (
-						<Component {...auth} {...props} />
+						<Component {...props} {...auth} />
 					)
 				}}
 			</AuthContext.Consumer>

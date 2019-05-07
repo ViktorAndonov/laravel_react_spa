@@ -27,30 +27,27 @@ import EditNote from './components/notes/EditNote'
 
 // Context
 import AuthProvider from './components/context/AuthProvider'
-// import UserProvider from './components/context/UserProvider'
 
 if (document.getElementById('root')) {
 	ReactDOM.render(
 		<AuthProvider>
-			{/* <UserProvider> */}
-				<Router>
-					<>
-						<Navbar />
-						<Switch>
-							<Route exact path="/" component={Welcome} />
-							<GuestRoute exact path="/login" component={Login} />
-							<GuestRoute exact path="/register" component={Register} />
-							<GuestRoute exact path="/password/forget" component={Forget} />
-							<GuestRoute exact path="/password/forget/send" component={ForgetEmailSend} />
-							<GuestRoute exact path="/password/reset" component={Reset} />
-							<PrivateRoute exact path="/notes" component={Notes} />
-							<PrivateRoute exact path="/notes/create" component={AddNote} />
-							<PrivateRoute exact path="/notes/:id/edit" component={EditNote} />
-							<Route component={NotFound} />
-						</Switch>
-					</>
-				</Router>
-			{/* </UserProvider> */}
+			<Router>
+				<>
+					<Navbar />
+					<Switch>
+						<Route exact path="/" component={Welcome} />
+						<GuestRoute exact path="/login" component={Login} />
+						<GuestRoute exact path="/register" component={Register} />
+						<GuestRoute exact path="/password/forget" component={Forget} />
+						<GuestRoute exact path="/password/forget/send" component={ForgetEmailSend} />
+						<GuestRoute exact path="/password/reset" component={Reset} />
+						<PrivateRoute exact path="/notes" component={Notes} />
+						<PrivateRoute exact path="/notes/create" component={AddNote} />
+						<PrivateRoute exact path="/notes/:id/edit" component={EditNote} />
+						<Route component={NotFound} />
+					</Switch>
+				</>
+			</Router>
 		</AuthProvider>,
 	document.getElementById('root'))
 }

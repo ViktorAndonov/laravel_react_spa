@@ -39,10 +39,10 @@ function Navbar(props) {
 										</ul>
 
 										<ul className="navbar-nav ml-auto">
-											{ props.accessToken ?
+											{ localStorage.getItem('access_token') ?
 											<>
 												<li className="nav-item">
-													<span className="nav-link disabled">{props.accessToken}</span>
+														<span className="nav-link disabled">HARDCODED</span>
 													{/* <span className="nav-link disabled">{user.first_name} {user.last_name}</span> */}
 												</li>
 												<li className="nav-item"><span className="nav-link disabled">|</span></li>
