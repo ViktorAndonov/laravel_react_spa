@@ -16,8 +16,8 @@ class Login extends Component {
 	}
 
 	/**
-	* _isMounted - Old-School solution for the memory leak async
-	* bug after submit is considered anti-pattern by someone.
+	* _isMounted - Old-School solution for async memory leak
+	* bug but, is considered anti-pattern by someone.
 	* Alternative there is axios cancel that you can implement,
 	* but is a long and complicated solution.
 	*

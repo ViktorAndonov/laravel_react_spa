@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link, NavLink } from 'react-router-dom'
-// import { UserContext } from './context/UserProvider'
-import { withAuth } from './context/AuthProvider';
+import { withAuth } from './context/AuthProvider'
 
 function Navbar(props) {
 	return (
@@ -42,8 +41,7 @@ function Navbar(props) {
 											{ localStorage.getItem('access_token') ?
 											<>
 												<li className="nav-item">
-														<span className="nav-link disabled">HARDCODED</span>
-													{/* <span className="nav-link disabled">{user.first_name} {user.last_name}</span> */}
+													<span className="nav-link disabled">{props.user.first_name} {props.user.last_name}</span>
 												</li>
 												<li className="nav-item"><span className="nav-link disabled">|</span></li>
 

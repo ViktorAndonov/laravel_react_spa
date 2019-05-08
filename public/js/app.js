@@ -150,7 +150,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _context_AuthProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./context/AuthProvider */ "./resources/js/components/context/AuthProvider.js");
 
- // import { UserContext } from './context/UserProvider'
 
 
 
@@ -215,7 +214,7 @@ function Navbar(props) {
     className: "nav-item"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "nav-link disabled"
-  }, "HARDCODED")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+  }, props.user.first_name, " ", props.user.last_name)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "nav-item"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "nav-link disabled"
@@ -365,8 +364,8 @@ function (_Component) {
     return _this;
   }
   /**
-  * _isMounted - Old-School solution for the memory leak async
-  * bug after submit is considered anti-pattern by someone.
+  * _isMounted - Old-School solution for async memory leak
+  * bug but, is considered anti-pattern by someone.
   * Alternative there is axios cancel that you can implement,
   * but is a long and complicated solution.
   *
@@ -1120,28 +1119,27 @@ function (_Component) {
       return axios.post('/api/login', user).then(function (response) {
         localStorage.setItem('access_token', response.data.access_token);
         localStorage.setItem('refresh_token', response.data.refresh_token);
-        var tokens = {
-          accessToken: response.data.access_token,
-          refreshToken: response.data.refresh_token
-        };
 
         _this.setState({
           accessToken: response.data.access_token,
           refreshToken: response.data.refresh_token
         });
 
+        _this.getUser();
+
         return response;
       });
     });
 
     _this.state = {
-      isAuth: false,
       accessToken: localStorage.getItem('access_token') || '',
-      refreshToken: localStorage.getItem('refresh_token') || '' // this.login = this.login.bind(this)
+      refreshToken: localStorage.getItem('refresh_token') || '',
+      user: JSON.parse(localStorage.getItem('user')) || {} // this.login = this.login.bind(this)
 
     };
     _this.register = _this.register.bind(_assertThisInitialized(_this));
     _this.logout = _this.logout.bind(_assertThisInitialized(_this));
+    _this.getUser = _this.getUser.bind(_assertThisInitialized(_this));
     return _this;
   }
   /**
@@ -1177,11 +1175,38 @@ function (_Component) {
 
         _this2.setState({
           accessToken: '',
-          refreshToken: ''
+          refreshToken: '',
+          user: {}
         });
       })["catch"](function (err) {
         console.log(err.response);
       });
+    }
+  }, {
+    key: "getUser",
+    value: function getUser() {
+      var _this3 = this;
+
+      var token = localStorage.getItem('access_token');
+
+      if (token) {
+        axios({
+          method: 'GET',
+          url: '/api/user',
+          headers: {
+            Authorization: "Bearer ".concat(token)
+          }
+        }).then(function (response) {
+          console.log(response.data);
+          localStorage.setItem('user', JSON.stringify(response.data));
+
+          _this3.setState({
+            user: response.data
+          });
+        })["catch"](function (err) {
+          console.log(err.response);
+        });
+      }
     }
     /**
     * Passing the "state" and all the methods
