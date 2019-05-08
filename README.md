@@ -19,5 +19,3 @@ Example Note app - users can create their own notes with title + description, to
 
 ### TODO
 * Refactor all the forms with HOC component.
-* Private and Guest routes need to be updated with the new AuthProvider.
-* UserProvider needs to be fully rewriten or deleted.
