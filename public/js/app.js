@@ -319,8 +319,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _context_AuthProvider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../context/AuthProvider */ "./resources/js/components/context/AuthProvider.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -337,6 +335,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -352,6 +352,9 @@ function (_Component) {
     _classCallCheck(this, Login);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Login).call(this, props));
+
+    _defineProperty(_assertThisInitialized(_this), "_isMounted", false);
+
     _this.state = {
       username: '',
       password: '',
@@ -361,8 +364,26 @@ function (_Component) {
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     return _this;
   }
+  /**
+  * _isMounted - Old-School solution for the memory leak async
+  * bug after submit is considered anti-pattern by someone.
+  * Alternative there is axios cancel that you can implement,
+  * but is a long and complicated solution.
+  *
+  */
+
 
   _createClass(Login, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this._isMounted = true;
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      this._isMounted = false;
+    }
+  }, {
     key: "handleChange",
     value: function handleChange(e) {
       this.setState(_defineProperty({}, e.target.name, e.target.value));
@@ -378,10 +399,13 @@ function (_Component) {
         password: this.state.password
       };
       this.props.login(user).then(function () {
-        _this2.setState({
-          errors: []
-        }); // this.props.history.push('/notes')
+        if (_this2._isMounted) {
+          _this2.setState({
+            errors: []
+          });
 
+          _this2.props.history.push('/notes');
+        }
       })["catch"](function (err) {
         var error = err.response.data.error;
 
@@ -1092,12 +1116,14 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(AuthProvider).call(this, props));
 
-    _defineProperty(_assertThisInitialized(_this), "_isMounted", false);
-
     _defineProperty(_assertThisInitialized(_this), "login", function (user) {
       return axios.post('/api/login', user).then(function (response) {
         localStorage.setItem('access_token', response.data.access_token);
         localStorage.setItem('refresh_token', response.data.refresh_token);
+        var tokens = {
+          accessToken: response.data.access_token,
+          refreshToken: response.data.refresh_token
+        };
 
         _this.setState({
           accessToken: response.data.access_token,
@@ -1118,25 +1144,15 @@ function (_Component) {
     _this.logout = _this.logout.bind(_assertThisInitialized(_this));
     return _this;
   }
+  /**
+  * Using arrow func's allow us to not
+  * bind the same func in the constructor.
+  * Requires Babel proposal class package.
+  *
+  */
+
 
   _createClass(AuthProvider, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this._isMounted = true;
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      this._isMounted = false;
-    }
-    /**
-    * Using arrow func's allow us to not
-    * bind the same func in the constructor.
-    * Requires Babel proposal class package.
-    *
-    */
-
-  }, {
     key: "register",
     value: function register(newUser) {
       return axios.post('/api/register', newUser).then(function (response) {

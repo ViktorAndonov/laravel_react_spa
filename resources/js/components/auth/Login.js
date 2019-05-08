@@ -15,6 +15,22 @@ class Login extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this)
 	}
 
+	/**
+	* _isMounted - Old-School solution for the memory leak async
+	* bug after submit is considered anti-pattern by someone.
+	* Alternative there is axios cancel that you can implement,
+	* but is a long and complicated solution.
+	*
+	*/
+	_isMounted = false
+
+	componentDidMount() {
+			this._isMounted = true
+	}
+	componentWillUnmount() {
+			this._isMounted = false
+	}
+
 	handleChange(e) {
 		this.setState({
 			[e.target.name]: e.target.value
@@ -31,8 +47,10 @@ class Login extends Component {
 
 		this.props.login(user)
 				.then(() => {
-					this.setState({ errors: [] })
-					// this.props.history.push('/notes')
+					if (this._isMounted) {
+						this.setState({ errors: [] })
+						this.props.history.push('/notes')
+					}
 				})
 				.catch(err => {
 					const { error } = err.response.data

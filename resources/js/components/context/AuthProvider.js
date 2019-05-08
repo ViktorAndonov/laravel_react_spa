@@ -16,15 +16,6 @@ class AuthProvider extends Component {
 		this.logout = this.logout.bind(this)
 	}
 
-	_isMounted = false
-
-	componentDidMount() {
-			this._isMounted = true
-	}
-	componentWillUnmount() {
-			this._isMounted = false
-	}
-
 	/**
 	* Using arrow func's allow us to not
 	* bind the same func in the constructor.
@@ -36,6 +27,11 @@ class AuthProvider extends Component {
 			.then(response => {
 				localStorage.setItem('access_token', response.data.access_token)
 				localStorage.setItem('refresh_token', response.data.refresh_token)
+
+				const tokens = {
+					accessToken: response.data.access_token,
+					refreshToken: response.data.refresh_token
+				}
 
 				this.setState({
 					accessToken: response.data.access_token,
